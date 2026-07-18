@@ -1,0 +1,75 @@
+category,term,n_matches,drugbank_ids,status
+Cardiovascular & Blood Thinner,Atorvastatin,1,DB01076,matched
+Cardiovascular & Blood Thinner,Rosuvastatin,1,DB01098,matched
+Cardiovascular & Blood Thinner,Simvastatin,1,DB00641,matched
+Cardiovascular & Blood Thinner,Ramipril,1,DB00178,matched
+Cardiovascular & Blood Thinner,Bisoprolol,1,DB00612,matched
+Cardiovascular & Blood Thinner,Lisinopril,1,DB00722,matched
+Cardiovascular & Blood Thinner,Amlodipine,1,DB00381,matched
+Cardiovascular & Blood Thinner,Losartan,1,DB00678,matched
+Cardiovascular & Blood Thinner,Clopidogrel,1,DB00758,matched
+Cardiovascular & Blood Thinner,Apixaban,1,DB06605,matched
+Cardiovascular & Blood Thinner,Rivaroxaban,1,DB06228,matched
+Cardiovascular & Blood Thinner,Furosemide,1,DB00695,matched
+Cardiovascular & Blood Thinner,Bendroflumethiazide,1,DB00436,matched
+Cardiovascular & Blood Thinner,Aspirin,1,DB00945,matched
+Cardiovascular & Blood Thinner,Warfarin,1,DB00682,matched
+Endocrine & Metabolic,Metformin,1,DB00331,matched
+Endocrine & Metabolic,Levothyroxine,1,DB00451,matched
+Endocrine & Metabolic,Dapagliflozin,1,DB06292,matched
+Endocrine & Metabolic,Empagliflozin,1,DB09038,matched
+Endocrine & Metabolic,Semaglutide,1,DB13928,matched
+Endocrine & Metabolic,Tirzepatide,1,DB15171,matched
+Endocrine & Metabolic,Liraglutide,1,DB06655,matched
+Endocrine & Metabolic,Sitagliptin,1,DB01261,matched
+Endocrine & Metabolic,Insulin glargine,1,DB00047,matched
+Endocrine & Metabolic,Insulin aspart,1,DB01306,matched
+Central Nervous System,Sertraline,1,DB01104,matched
+Central Nervous System,Citalopram,1,DB00215,matched
+Central Nervous System,Escitalopram,1,DB01175,matched
+Central Nervous System,Amitriptyline,1,DB00321,matched
+Central Nervous System,Fluoxetine,1,DB00472,matched
+Central Nervous System,Pregabalin,1,DB00230,matched
+Central Nervous System,Gabapentin,1,DB00996,matched
+Central Nervous System,Codeine,1,DB00318,matched
+Central Nervous System,Morphine,1,DB00295,matched
+Central Nervous System,Paracetamol,1,DB00316,matched
+Central Nervous System,Ibuprofen,1,DB01050,matched
+Central Nervous System,Naproxen,1,DB00788,matched
+Central Nervous System,Methotrexate,1,DB00563,matched
+Central Nervous System,Quetiapine,1,DB01224,matched
+Central Nervous System,Olanzapine,1,DB00334,matched
+Central Nervous System,Dextromethorphan,1,DB00514,matched
+Allergic Reactions,Cetirizine,1,DB00341,matched
+Allergic Reactions,Levocetirizine,1,DB06282,matched
+Allergic Reactions,Loratadine,1,DB00455,matched
+Allergic Reactions,Chlorphenamine,1,DB01114,matched
+Allergic Reactions,Montelukast,1,DB00471,matched
+Allergic Reactions,Fexofenadine,1,DB00950,matched
+Allergic Reactions,Pseudoephedrine,1,DB00852,matched
+Respiratory,Salbutamol,1,DB01001,matched
+Respiratory,Beclometasone,2,DB00394;DB14221,matched
+Respiratory,Budesonide,1,DB01222,matched
+Respiratory,Tiotropium,1,DB01409,matched
+Gastrointestinal,Omeprazole,1,DB00338,matched
+Gastrointestinal,Lansoprazole,1,DB00448,matched
+Gastrointestinal,Rabeprazole,1,DB01129,matched
+Gastrointestinal,Cimetidine,1,DB00501,matched
+Gastrointestinal,Lactulose,1,DB00581,matched
+Gastrointestinal,Amoxicillin,1,DB01060,matched
+Gastrointestinal,Clarithromycin,1,DB01211,matched
+Infections,Nitrofurantoin,1,DB00698,matched
+Infections,Trimethoprim,1,DB00440,matched
+Infections,Doxycycline,1,DB00254,matched
+Infections,Phenoxymethylpenicillin,1,DB00417,matched
+Infections,Flucloxacillin,1,DB00301,matched
+Infections,Itraconazole,1,DB01167,matched
+Supplements,Colecalciferol,1,DB00169,matched
+Supplements,Folic Acid,1,DB00158,matched
+Supplements,Ferrous fumarate,1,DB14491,matched
+Supplements,Ferrous sulfate,2,DB11171;DB13257,matched
+Supplements,Hydroxocobalamin,1,DB00200,matched
+Supplements,Calcium carbonate,1,DB06724,matched
+Supplements,Zinc,1,DB01593,matched
+Supplements,Ascorbic acid,1,DB00126,matched
+Supplements,Phenelzine,1,DB00780,matched
