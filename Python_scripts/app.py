@@ -529,6 +529,21 @@ def append_audit(row: dict) -> tuple[bool, str]:
 # 8. VIEW 1  —  THE MEDX LANDING PORTAL
 # ===========================================================================
 def render_landing(names: list[str]) -> None:
+    # --- SYNONYM TRANSLATION LAYER ---
+    SYNONYM_LOOKUP = {
+        "acetaminophen": "Acetaminophen / Paracetamol",
+        "acetylsalicylic acid": "Acetylsalicylic acid / Aspirin",
+        "ascorbic acid": "Ascorbic acid / Vitamin C"
+    }
+    
+    display_to_canonical = {}
+    dropdown_options = []
+    for n in names:
+        disp = SYNONYM_LOOKUP.get(n.lower().strip(), n)
+        dropdown_options.append(disp)
+        display_to_canonical[disp] = n
+    dropdown_options = sorted(list(set(dropdown_options)))
+
     # --- Branding header --------------------------------------------------
     st.markdown('<div class="medx-pill">Polypharmacy Safety Platform</div>',
                 unsafe_allow_html=True)
@@ -553,10 +568,10 @@ def render_landing(names: list[str]) -> None:
 
         selected = st.multiselect(
             label="Search medications",
-            options=names,
+            options=dropdown_options,
             default=st.session_state.get("ms_drugs", []),
             key="ms_drugs",
-            placeholder="Start typing a drug name — e.g. Warfarin, Aspirin, Atorvastatin…",
+            placeholder="Start typing a drug name — e.g. Paracetamol, Aspirin, Vitamin C…",
             label_visibility="collapsed",
         )
 
@@ -579,9 +594,10 @@ def render_landing(names: list[str]) -> None:
         if not selected:
             st.warning("Please select at least one medication to check.")
         else:
-            st.session_state["checked_drugs"] = list(selected)
+            st.session_state["checked_drugs"] = [display_to_canonical[disp] for disp in selected]
             st.session_state["view"] = "results"
             _rerun()
+        
 
     # --- Dynamic wellness & lifestyle component --------------------------
     st.markdown('<div class="section-title">Daily Wellness & Lifestyle</div>',
@@ -882,12 +898,22 @@ def render_results(df: pd.DataFrame, name2id: dict, food_map: dict) -> None:
         render_disclaimer()
         return
 
+    # --- Translate canonical tags back to clean dual titles for the UI display ---
+    SYNONYM_LOOKUP = {
+        "acetaminophen": "Acetaminophen / Paracetamol",
+        "acetylsalicylic acid": "Acetylsalicylic acid / Aspirin",
+        "ascorbic acid": "Ascorbic acid / Vitamin C"
+    }
+    
+    display_tags = [SYNONYM_LOOKUP.get(n.lower().strip(), n) for n in selected]
+
     tags = "  ".join(
         f'<span style="background:var(--brand-soft);color:var(--brand-dark);'
         f'padding:.3rem .8rem;border-radius:999px;font-weight:700;font-size:.9rem;">'
-        f'{html.escape(n)}</span>'
-        for n in selected
+        f'{html.escape(t)}</span>'
+        for t in display_tags
     )
+    
     mode = ("Showing every documented interaction for this medicine."
             if len(selected) == 1
             else "Showing documented interactions between the selected medicines.")
