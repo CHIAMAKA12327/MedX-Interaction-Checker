@@ -503,26 +503,24 @@ def render_disclaimer() -> None:
 # 7. AUDIT WRITER  (create-with-headers-then-append, fully guarded)
 # ===========================================================================
 def append_audit(row: dict) -> tuple[bool, str]:
-    """
-    Append one evaluation record to user_testing_audits.csv.
-
-    Creates the file with a header row if it does not yet exist, then appends.
-    Returns (success, message) and never raises.
-    """
+    """Appends evaluation records directly to a secure live Google Sheet."""
+    import requests
+    import json
     try:
-        os.makedirs(os.path.dirname(AUDIT_PATH), exist_ok=True)
-        file_exists = os.path.isfile(AUDIT_PATH)
-        with open(AUDIT_PATH, "a", newline="", encoding="utf-8-sig") as fh:
-            writer = csv.DictWriter(fh, fieldnames=AUDIT_COLUMNS)
-            if not file_exists or os.path.getsize(AUDIT_PATH) == 0:
-                writer.writeheader()
-            writer.writerow({k: row.get(k, "") for k in AUDIT_COLUMNS})
-        return True, "Evaluation recorded successfully."
-    except PermissionError:
-        return False, ("The audit file appears to be open in another program "
-                       "(e.g. Excel). Please close it and submit again.")
-    except Exception as exc:                       # noqa: BLE001 - never leak a raw trace
-        return False, f"Could not save the evaluation ({type(exc).__name__})."
+        
+        GOOGLE_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzio2rXSCnd0z6Sg5-WnoLvMyraAn51_xbK5wRxXkaMIjuFa302VNLLR5ROAXdPfCTR/exec"
+        
+        # Stream the JSON data payload over the web to your spreadsheet
+        response = requests.post(
+            GOOGLE_WEBAPP_URL, 
+            data=json.dumps(row), 
+            headers={"Content-Type": "application/json"}
+        )
+        if response.status_code == 200:
+            return True, "Evaluation recorded safely in the cloud spreadsheet ledger."
+        return False, f"Spreadsheet connection returned status code: {response.status_code}"
+    except Exception as exc:
+        return False, f"Could not sync with cloud ledger ({type(exc).__name__})."
 
 
 # ===========================================================================
