@@ -653,8 +653,8 @@ if check:
         
 
     # --- Dynamic wellness & lifestyle component --------------------------
-    st.markdown('<div class="section-title">Daily Wellness & Lifestyle</div>',
-                unsafe_allow_html=True)
+st.markdown('<div class="section-title">Daily Wellness & Lifestyle</div>',
+            unsafe_allow_html=True)
 
     idx = st.session_state.get("wellness_idx", 0)
     idx = max(0, min(idx, len(WELLNESS_CARDS) - 1))
