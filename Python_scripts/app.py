@@ -582,6 +582,10 @@ def render_landing(names: list[str]) -> None:
 
     # --- Multi-select search interface -----------------------------------
     with st.container():
+        # Track overall landing page visits silently
+        if "traffic_logged" not in st.session_state:
+            log_traffic_event(event_type="Page Visit", details="User initialized MedX web app application interface.")
+            st.session_state["traffic_logged"] = True
         st.markdown('<div class="search-hero">', unsafe_allow_html=True)
         st.markdown('<div class="search-label">🔎 Search medications</div>',
                     unsafe_allow_html=True)
