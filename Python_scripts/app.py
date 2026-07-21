@@ -584,6 +584,11 @@ def render_landing(names: list[str]) -> None:
 
     # --- Multi-select search interface -----------------------------------
     with st.container():
+        # Diagnostic alert: Displays any hidden network crashes that occurred during lookups
+    if "traffic_debug_error" in st.session_state:
+        st.error(f"⚠️ Hidden Traffic Logger Error: {st.session_state['traffic_debug_error']}")
+        del st.session_state["traffic_debug_error"]
+
         # Track overall landing page visits silently
         if "traffic_logged" not in st.session_state:
             log_traffic_event(event_type="Page Visit", details="User initialized MedX web app application interface.")
@@ -622,11 +627,28 @@ def render_landing(names: list[str]) -> None:
         if not selected:
             st.warning("Please select at least one medication to check.")
         else:
-            # Track the specific search query details silently
-            searched_drugs_string = ", ".join(selected) if 'selected' in locals() else "Unknown Combo"
-            log_traffic_event(event_type="Interaction Lookup", details=f"Queried Combination: {searched_drugs_string}")
-            st.session_state["checked_drugs"] = [display_to_canonical[disp] for disp in selected]
-            st.session_state["view"] = "results"
+            # 1. Capture the searched items cleanly
+        searched_drugs_string = ", ".join(selected) if 'selected' in locals() else "Unknown Combo"
+        
+        # 2. Inline Cloud Sync (Bypasses external function mapping completely)
+        try:
+            import requests
+            import json
+            from datetime import datetime
+            
+            requests.post(
+                "https://script.google.com/macros/s/AKfycbzio2rXSCnd0z6Sg5-WnoLvMyraAn51_xbK5wRxXkaMIJuFa302VNLLR5ROAXdPfCTR/exec",
+                data=json.dumps({
+                    "log_type": "traffic",
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "event_type": "Interaction Lookup",
+                    "details": f"Queried Combination: {searched_drugs_string}"
+                }),
+                headers={"Content-Type": "application/json"}
+            )
+        except Exception as e:
+            # Keeps the error message safe in memory so the rerun can't delete it
+            st.session_state["traffic_debug_error"] = str(e)
             _rerun()
         
 
