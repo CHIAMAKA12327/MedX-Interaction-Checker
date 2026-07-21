@@ -583,16 +583,17 @@ def render_landing(names: list[str]) -> None:
     st.write("")
 
     # --- Multi-select search interface -----------------------------------
-with st.container():
+    with st.container():
         # Diagnostic alert: Displays any hidden network crashes that occurred during lookups
-    if "traffic_debug_error" in st.session_state:
-        st.error(f"⚠️ Hidden Traffic Logger Error: {st.session_state['traffic_debug_error']}")
-        del st.session_state["traffic_debug_error"]
+        if "traffic_debug_error" in st.session_state:
+            st.error(f"⚠️ Hidden Traffic Logger Error: {st.session_state['traffic_debug_error']}")
+            del st.session_state["traffic_debug_error"]
 
         # Track overall landing page visits silently
         if "traffic_logged" not in st.session_state:
             log_traffic_event(event_type="Page Visit", details="User initialized MedX web app application interface.")
             st.session_state["traffic_logged"] = True
+            
         st.markdown('<div class="search-hero">', unsafe_allow_html=True)
         st.markdown('<div class="search-label">🔎 Search medications</div>',
                     unsafe_allow_html=True)
@@ -622,11 +623,11 @@ with st.container():
                     unsafe_allow_html=True,
                 )
         st.markdown('</div>', unsafe_allow_html=True)
-if check:
+
+    if check:
         if not selected:
             st.warning("Please select at least one medication to check.")
         else:
-            # All lines below here are perfectly aligned at 12 spaces
             searched_drugs_string = ", ".join(selected) if 'selected' in locals() else "Unknown Combo"
             
             try:
@@ -651,10 +652,9 @@ if check:
             st.session_state["view"] = "results"
             _rerun()
         
-
     # --- Dynamic wellness & lifestyle component --------------------------
-st.markdown('<div class="section-title">Daily Wellness & Lifestyle</div>',
-            unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Daily Wellness & Lifestyle</div>',
+                unsafe_allow_html=True)
 
     idx = st.session_state.get("wellness_idx", 0)
     idx = max(0, min(idx, len(WELLNESS_CARDS) - 1))
@@ -713,7 +713,6 @@ the judgement of a qualified healthcare professional.
         )
 
     render_disclaimer()
-
 
 # ===========================================================================
 # 9. VIEW 2  —  INTERACTIVE RESULTS & DIAGNOSTIC PORTAL
