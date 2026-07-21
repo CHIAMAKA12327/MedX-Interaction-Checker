@@ -583,7 +583,7 @@ def render_landing(names: list[str]) -> None:
     st.write("")
 
     # --- Multi-select search interface -----------------------------------
-    with st.container():
+with st.container():
         # Diagnostic alert: Displays any hidden network crashes that occurred during lookups
     if "traffic_debug_error" in st.session_state:
         st.error(f"⚠️ Hidden Traffic Logger Error: {st.session_state['traffic_debug_error']}")
