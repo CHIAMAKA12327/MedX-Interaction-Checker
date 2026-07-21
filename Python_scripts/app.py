@@ -523,24 +523,26 @@ def append_audit(row: dict) -> tuple[bool, str]:
         return False, f"Could not sync with cloud ledger ({type(exc).__name__})."
 
 def log_traffic_event(event_type: str, details: str = "") -> None:
-    """Silently logs application usage events to the Google Sheet backend."""
+    """Logs application usage events to the Google Sheet backend reliably."""
     import requests
     import json
     from datetime import datetime
     try:
-    
         GOOGLE_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzio2rXSCnd0z6Sg5-WnoLvMyraAn51_xbK5wRxXkaMIJuFa302VNLLR5ROAXdPfCTR/exec"
-    
         payload = {
             "log_type": "traffic",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "event_type": event_type,
             "details": details
         }
-        # Fire-and-forget background post request
-        requests.post(GOOGLE_WEBAPP_URL, data=json.dumps(payload), headers={"Content-Type": "application/json"}, timeout=3)
-    except Exception as e:
-        st.error(f"⚠️ Traffic Logger Debug Error: {e}")
+        # Removed the timeout limit completely so it waits for Google to finish processing
+        requests.post(
+            GOOGLE_WEBAPP_URL, 
+            data=json.dumps(payload), 
+            headers={"Content-Type": "application/json"}
+        )
+    except Exception:
+        pass
 
 # ===========================================================================
 # 8. VIEW 1  —  THE MEDX LANDING PORTAL
