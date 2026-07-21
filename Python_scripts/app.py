@@ -539,8 +539,8 @@ def log_traffic_event(event_type: str, details: str = "") -> None:
         }
         # Fire-and-forget background post request
         requests.post(GOOGLE_WEBAPP_URL, data=json.dumps(payload), headers={"Content-Type": "application/json"}, timeout=3)
-    except Exception:
-        pass  # Fails silently so it never interrupts the doctor/patient user experience
+    except Exception as e:
+        st.error(f"⚠️ Traffic Logger Debug Error: {e}")
 
 # ===========================================================================
 # 8. VIEW 1  —  THE MEDX LANDING PORTAL
