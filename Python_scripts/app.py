@@ -622,33 +622,33 @@ with st.container():
                     unsafe_allow_html=True,
                 )
         st.markdown('</div>', unsafe_allow_html=True)
-
-    if check:
+if check:
         if not selected:
             st.warning("Please select at least one medication to check.")
         else:
-            # 1. Capture the searched items cleanly
-        searched_drugs_string = ", ".join(selected) if 'selected' in locals() else "Unknown Combo"
-        
-        # 2. Inline Cloud Sync (Bypasses external function mapping completely)
-        try:
-            import requests
-            import json
-            from datetime import datetime
+            # All lines below here are perfectly aligned at 12 spaces
+            searched_drugs_string = ", ".join(selected) if 'selected' in locals() else "Unknown Combo"
             
-            requests.post(
-                "https://script.google.com/macros/s/AKfycbzio2rXSCnd0z6Sg5-WnoLvMyraAn51_xbK5wRxXkaMIJuFa302VNLLR5ROAXdPfCTR/exec",
-                data=json.dumps({
-                    "log_type": "traffic",
-                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "event_type": "Interaction Lookup",
-                    "details": f"Queried Combination: {searched_drugs_string}"
-                }),
-                headers={"Content-Type": "application/json"}
-            )
-        except Exception as e:
-            # Keeps the error message safe in memory so the rerun can't delete it
-            st.session_state["traffic_debug_error"] = str(e)
+            try:
+                import requests
+                import json
+                from datetime import datetime
+                
+                requests.post(
+                    "https://script.google.com/macros/s/AKfycbzio2rXSCnd0z6Sg5-WnoLvMyraAn51_xbK5wRxXkaMIJuFa302VNLLR5ROAXdPfCTR/exec",
+                    data=json.dumps({
+                        "log_type": "traffic",
+                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "event_type": "Interaction Lookup",
+                        "details": f"Queried Combination: {searched_drugs_string}"
+                    }),
+                    headers={"Content-Type": "application/json"}
+                )
+            except Exception as e:
+                st.session_state["traffic_debug_error"] = str(e)
+                
+            st.session_state["checked_drugs"] = [display_to_canonical[disp] for disp in selected]
+            st.session_state["view"] = "results"
             _rerun()
         
 
