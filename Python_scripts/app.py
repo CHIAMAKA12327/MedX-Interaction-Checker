@@ -21,7 +21,7 @@ import random
 from datetime import datetime
 
 import pandas as pd
-import streamlit st
+import streamlit as st
 
 # ===========================================================================
 # 1. SYSTEM CHANNELS & LOCAL PATH SEGREGATION  (exact paths, no exception)
