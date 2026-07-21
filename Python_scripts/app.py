@@ -522,10 +522,34 @@ def append_audit(row: dict) -> tuple[bool, str]:
     except Exception as exc:
         return False, f"Could not sync with cloud ledger ({type(exc).__name__})."
 
+def log_traffic_event(event_type: str, details: str = "") -> None:
+    """Silently logs application usage events to the Google Sheet backend."""
+    import requests
+    import json
+    from datetime import datetime
+    try:
+    
+        GOOGLE_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzio2rXSCnd0z6Sg5-WnoLvMyraAn51_xbK5wRxXkaMIJuFa302VNLLR5ROAXdPfCTR/exec"
+    
+        payload = {
+            "log_type": "traffic",
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "event_type": event_type,
+            "details": details
+        }
+        # Fire-and-forget background post request
+        requests.post(GOOGLE_WEBAPP_URL, data=json.dumps(payload), headers={"Content-Type": "application/json"}, timeout=3)
+    except Exception:
+        pass  # Fails silently so it never interrupts the doctor/patient user experience
 
 # ===========================================================================
 # 8. VIEW 1  —  THE MEDX LANDING PORTAL
 # ===========================================================================
+# Track overall landing page visits
+if "traffic_logged" not in st.session_state:
+    log_traffic_event(event_type="Page Visit", details="User initialized MedX web app application interface.")
+    st.session_state["traffic_logged"] = True
+
 def render_landing(names: list[str]) -> None:
     # --- SYNONYM TRANSLATION LAYER ---
     SYNONYM_LOOKUP = {
@@ -592,6 +616,9 @@ def render_landing(names: list[str]) -> None:
         if not selected:
             st.warning("Please select at least one medication to check.")
         else:
+            # Track the specific search query details silently
+            searched_drugs_string = ", ".join(selected) if 'selected' in locals() else "Unknown Combo"
+            log_traffic_event(event_type="Interaction Lookup", details=f"Queried Combination: {searched_drugs_string}")
             st.session_state["checked_drugs"] = [display_to_canonical[disp] for disp in selected]
             st.session_state["view"] = "results"
             _rerun()
