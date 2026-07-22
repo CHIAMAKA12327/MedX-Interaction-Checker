@@ -50,6 +50,8 @@ AUDIT_COLUMNS = [
     "drugs_evaluated",
     "matched_interactions",
     "highest_severity",
+    "rating",
+    "review_comments",
 ]
 
 # Severity presentation metadata (drives the strict colour-coding + alert symbols).
@@ -262,6 +264,34 @@ def inject_css() -> None:
         [data-baseweb="select"] > div {
             border-radius: 12px !important; border-color: var(--line) !important;
             min-height: 52px;
+        }
+
+        /* ---- Expert Validation checkboxes: recolour the checked tick RED -> clinical green ---- */
+        /* Streamlit's default primaryColor (#FF4B4B) fills the checked box; override to a
+           professional medical green so the ticks match the app's clinical colour system. */
+        [data-testid="stCheckbox"] input[type="checkbox"] { accent-color: #14b8a6; }
+
+        /* Modern Streamlit (React-Aria checkbox): the checked control is the first <div>
+           inside a <label> that carries data-selected="true". Paint its fill + border green. */
+        [data-testid="stCheckbox"] label[data-selected="true"] > div:first-of-type {
+            background-color: #14b8a6 !important;
+            border-color: #14b8a6 !important;
+        }
+        /* keep the check-mark glyph crisp white on the green fill */
+        [data-testid="stCheckbox"] label[data-selected="true"] svg,
+        [data-testid="stCheckbox"] label[data-selected="true"] svg polyline {
+            stroke: #ffffff !important; color: #ffffff !important;
+        }
+        /* robustness: same target expressed via :has() (silently ignored where unsupported) */
+        [data-testid="stCheckbox"] label[data-selected="true"] > div:has(> svg) {
+            background-color: #14b8a6 !important;
+            border-color: #14b8a6 !important;
+        }
+        /* backward-compatibility with older BaseWeb checkbox builds */
+        [data-baseweb="checkbox"] input:checked ~ span,
+        [data-baseweb="checkbox"] [data-checked="true"] {
+            background-color: #14b8a6 !important;
+            border-color: #14b8a6 !important;
         }
 
         /* ---- wellness card ---- */
@@ -905,6 +935,22 @@ def _render_evaluation_panel(selected: list[str], matched: int, highest: str) ->
             reviewer = st.text_input("Reviewer Name / ID",
                                      placeholder="e.g. Dr. A. Smith · RN-2048 · P-017")
 
+        # --- User rating & free-text review (streamed to the audit ledger) ---
+        rating = st.selectbox(
+            "Overall Star Rating",
+            [
+                "⭐⭐⭐⭐⭐ Excellent",
+                "⭐⭐⭐⭐ Very Good",
+                "⭐⭐⭐ Good",
+                "⭐⭐ Fair",
+                "⭐ Poor",
+            ],
+        )
+        review_comments = st.text_area(
+            "User Reviews / Comments",
+            placeholder="Share any comments on accuracy, clarity or usefulness…",
+        )
+
         submitted = st.form_submit_button("✅  Submit Evaluation", type="primary")
 
     if submitted:
@@ -920,6 +966,8 @@ def _render_evaluation_panel(selected: list[str], matched: int, highest: str) ->
             "drugs_evaluated": "; ".join(selected),
             "matched_interactions": matched,
             "highest_severity": highest,
+            "rating": rating,
+            "review_comments": review_comments,
         }
         ok, msg = append_audit(record)
         if ok:
